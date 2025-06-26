@@ -41,6 +41,13 @@ export const componentsData: ComponentData[] = [
     description: 'Flexible containers for grouping content',
     category: 'components',
     tags: ['card', 'container', 'content', 'layout']
+  },
+  {
+    id: 'data-tiles',
+    title: 'Data Tile',
+    description: 'Configurable tiles for displaying metrics and data points',
+    category: 'components',
+    tags: ['data', 'tile', 'metrics', 'analytics', 'dashboard']
   }
 ];
 

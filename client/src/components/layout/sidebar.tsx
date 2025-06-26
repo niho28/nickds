@@ -90,7 +90,7 @@ export default function Sidebar({
               Components
             </h3>
             <ul className="space-y-1">
-              {['buttons', 'inputs', 'cards'].map((component) => (
+              {['buttons', 'inputs', 'cards', 'data-tiles'].map((component) => (
                 <li key={component}>
                   <button
                     onClick={() => handleSectionClick(component)}
@@ -100,7 +100,7 @@ export default function Sidebar({
                         : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
                     }`}
                   >
-                    {component.charAt(0).toUpperCase() + component.slice(1)}
+                    {component === 'data-tiles' ? 'Data Tile' : component.charAt(0).toUpperCase() + component.slice(1)}
                   </button>
                 </li>
               ))}

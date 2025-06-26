@@ -5,6 +5,7 @@ import IntroductionSection from "@/components/sections/introduction-section";
 import ButtonsSection from "@/components/sections/buttons-section";
 import InputsSection from "@/components/sections/inputs-section";
 import CardsSection from "@/components/sections/cards-section";
+import DataTilesSection from "@/components/sections/data-tiles-section";
 import DesignTokensSection from "@/components/sections/design-tokens-section";
 
 export default function Home() {
@@ -17,6 +18,7 @@ export default function Home() {
     { id: "buttons", title: "Button", component: ButtonsSection },
     { id: "inputs", title: "Input", component: InputsSection },
     { id: "cards", title: "Card", component: CardsSection },
+    { id: "data-tiles", title: "Data Tile", component: DataTilesSection },
   ];
 
   const filteredSections = sections.filter(section =>

@@ -1,4 +1,4 @@
-import { MoreHorizontal, ChevronRight, ExternalLink } from "lucide-react";
+import { MoreHorizontal, ChevronRight } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -9,140 +9,141 @@ export interface DataTileMetric {
   value: string | number;
 }
 
+export interface DataTileColumn {
+  pillLabel?: string;
+  subtitle: string;
+  primaryValue: string | number;
+}
+
 export interface DataTileProps {
   title: string;
-  style?: "list" | "summary";
+  layout?: "single" | "double" | "list";
+  // Single column props
   subtitle?: string;
   primaryValue?: string | number;
   pillLabel?: string;
+  // Double column props
+  columns?: DataTileColumn[];
+  // List props
   metrics?: DataTileMetric[];
+  // Footer action
   actionLabel?: string;
   onActionClick?: () => void;
+  showFooter?: boolean;
   className?: string;
-  variant?: "default" | "compact";
 }
 
 export function DataTile({
   title,
-  style = "list",
+  layout = "single",
   subtitle,
   primaryValue,
   pillLabel,
+  columns = [],
   metrics = [],
-  actionLabel = "Actionable Link",
+  actionLabel,
   onActionClick,
-  className,
-  variant = "default"
+  showFooter = true,
+  className
 }: DataTileProps) {
-  const isCompact = variant === "compact";
-  
   return (
     <Card className={cn(
-      "relative border border-slate-200 bg-white shadow-sm hover:shadow-md transition-shadow duration-200", 
+      "relative border border-slate-200 bg-white shadow-sm", 
       className
     )}>
-      <CardHeader className={cn(
-        "flex flex-row items-start justify-between space-y-0",
-        isCompact ? "pb-3" : "pb-4"
-      )}>
-        <div className="flex-1 min-w-0">
-          <h3 className={cn(
-            "font-semibold text-slate-900 truncate",
-            isCompact ? "text-sm" : "text-base"
-          )}>
-            {title}
-          </h3>
-          {subtitle && style !== "summary" && (
-            <p className="text-xs text-slate-500 mt-1 truncate">{subtitle}</p>
-          )}
-        </div>
+      {/* Header */}
+      <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-6">
+        <h3 className="text-base font-semibold text-slate-900">
+          {title}
+        </h3>
         <Button 
           variant="ghost" 
           size="sm" 
-          className="h-6 w-6 p-0 text-slate-400 hover:text-slate-600 flex-shrink-0 ml-2"
+          className="h-6 w-6 p-0 text-slate-400 hover:text-slate-600"
         >
-          <MoreHorizontal className="h-3 w-3" />
+          <MoreHorizontal className="h-4 w-4" />
         </Button>
       </CardHeader>
       
-      <CardContent className={cn("pt-0", isCompact ? "pb-4" : "pb-6")}>
-        {style === "list" && (
-          <div className={cn("space-y-3", isCompact && "space-y-2")}>
-            {metrics.length > 0 && (
-              <div className={cn("space-y-3", isCompact && "space-y-2")}>
-                {metrics.map((metric, index) => (
-                  <div key={index} className="flex items-center justify-between group">
-                    <span className={cn(
-                      "text-slate-600 truncate pr-4", 
-                      isCompact ? "text-xs" : "text-sm"
-                    )}>
-                      {metric.label}
-                    </span>
-                    <span className={cn(
-                      "font-semibold text-slate-900 flex-shrink-0",
-                      isCompact ? "text-xs" : "text-sm"
-                    )}>
-                      {metric.value}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-
-        {style === "summary" && (
-          <div className={cn("space-y-4", isCompact && "space-y-3")}>
+      <CardContent className="pt-0 pb-6">
+        {/* Single Column Layout */}
+        {layout === "single" && (
+          <div className="space-y-4">
             {pillLabel && (
               <Badge 
-                variant="secondary" 
-                className={cn(
-                  "text-xs font-medium bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100",
-                  isCompact && "text-[10px] px-2 py-0.5"
-                )}
+                variant="outline" 
+                className="text-xs font-medium text-pink-600 border-pink-300 bg-transparent rounded-sm px-2 py-1"
               >
                 {pillLabel}
               </Badge>
             )}
             
             {subtitle && (
-              <p className={cn(
-                "text-slate-600 leading-relaxed",
-                isCompact ? "text-xs" : "text-sm"
-              )}>
+              <div className="text-sm text-slate-700 font-medium">
                 {subtitle}
-              </p>
+              </div>
             )}
             
             {primaryValue !== undefined && (
-              <div className={cn(
-                "font-bold text-slate-900",
-                isCompact ? "text-xl" : "text-2xl"
-              )}>
+              <div className="text-2xl font-bold text-slate-900">
                 {primaryValue}
               </div>
             )}
           </div>
         )}
 
-        {actionLabel && (
-          <div className={cn(
-            "mt-5 pt-4 border-t border-slate-100",
-            isCompact && "mt-4 pt-3"
-          )}>
+        {/* Double Column Layout */}
+        {layout === "double" && columns.length > 0 && (
+          <div className="grid grid-cols-2 gap-8">
+            {columns.map((column, index) => (
+              <div key={index} className="space-y-4">
+                {column.pillLabel && (
+                  <Badge 
+                    variant="outline" 
+                    className="text-xs font-medium text-pink-600 border-pink-300 bg-transparent rounded-sm px-2 py-1"
+                  >
+                    {column.pillLabel}
+                  </Badge>
+                )}
+                
+                <div className="text-sm text-slate-700 font-medium">
+                  {column.subtitle}
+                </div>
+                
+                <div className="text-2xl font-bold text-slate-900">
+                  {column.primaryValue}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* List Layout */}
+        {layout === "list" && metrics.length > 0 && (
+          <div className="space-y-6">
+            {metrics.map((metric, index) => (
+              <div key={index} className="flex items-start justify-between">
+                <div className="text-sm text-slate-700 font-medium">
+                  {metric.label}
+                </div>
+                <div className="text-sm text-slate-700 font-medium text-right">
+                  {metric.value}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Footer Action */}
+        {showFooter && actionLabel && (
+          <div className="mt-6 pt-4 border-t border-slate-100">
             <Button 
               variant="ghost" 
-              size="sm"
-              className={cn(
-                "h-auto p-0 text-sm font-medium text-blue-600 hover:text-blue-800 hover:bg-transparent group",
-                isCompact && "text-xs"
-              )}
+              className="h-auto p-0 text-sm font-medium text-blue-600 hover:text-blue-800 hover:bg-transparent"
               onClick={onActionClick}
             >
-              <span className="flex items-center">
-                {actionLabel}
-                <ExternalLink className="ml-1 h-3 w-3 transition-transform group-hover:translate-x-0.5" />
-              </span>
+              <ChevronRight className="mr-1 h-3 w-3" />
+              {actionLabel}
             </Button>
           </div>
         )}
